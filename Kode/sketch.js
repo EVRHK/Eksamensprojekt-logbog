@@ -21,10 +21,12 @@ function setup()
 
 function draw()
 {
+	//Loader baggrund og player
 	image(imgBackground, 0, 0, 800, 800);
 	image(imgSpaceship, spaceship[0], spaceship[1], spaceship[2], spaceship[3]);
 	
 	spawnCount = 5;
+	//Spawner aliens
 	for(let i = 0; i<spawnCount; i++){
 		alienx.push(alienx[0+i]+100);
 		image(imgAlien, alienx[0+i], alieny[0], 50, 50);
@@ -33,6 +35,7 @@ function draw()
 	if(k == true){
 	console.log(width);
 	k = false;
+
 	}
 	for(let i = 0;i < alienx.length;i++){
 		alienx[0+i] += speed;
