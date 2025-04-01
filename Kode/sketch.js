@@ -1,12 +1,7 @@
 let imgSpaceship;
 let imgAlien;
-let laser;
-let spaceship = [350, 700, 100, 100];
-let alienx = [100];
-let alieny = [100];
-let speed = 5;
-let spawnCount;
-let k = true;
+let spaceship = {x: 350, y: 700, w: 100, h: 100, rightSpeed: 4, leftSpeed: 4, tempSpeed: 4};
+let alien = {};
 
 function preload(){
 	imgBackground = loadImage('Baggrund.jpg');
@@ -23,58 +18,31 @@ function draw()
 {
 	//Loader baggrund og player
 	image(imgBackground, 0, 0, 800, 800);
-	image(imgSpaceship, spaceship[0], spaceship[1], spaceship[2], spaceship[3]);
-	
-	spawnCount = 5;
-	//Spawner aliens
-	for(let i = 0; i<spawnCount; i++){
-		alienx.push(alienx[0+i]+100);
-		image(imgAlien, alienx[0+i], alieny[0], 50, 50);
-	}
-	
-	if(k == true){
-	console.log(width);
-	k = false;
+	spawnImage(imgSpaceship, spaceship);
 
+	//Bordercheck left
+	if (spaceship.x <= 0) {
+		spaceship.leftSpeed = 0;
+	}else {
+		spaceship.leftSpeed = spaceship.tempSpeed;
 	}
-	for(let i = 0;i < alienx.length;i++){
-		alienx[0+i] += speed;
-	}
-	for(let i = 0;i < alienx.length;i++){
-		borderCheck(alienx[0+i], 0);
-	}
-	
 
+	//Bordercheck right
+	if ((spaceship.x + spaceship.w) >= width) {
+		spaceship.rightSpeed = 0;
+	} else {
+		spaceship.rightSpeed = spaceship.tempSpeed;
+	}
 
 	if(keyIsDown(68)){ // Key D
-		spaceship[0] = addSpeed(spaceship[0], 2);
+		spaceship.x += spaceship.rightSpeed;
 	}
 	if(keyIsDown(65)){ // Key A
-		spaceship[0] = addSpeed(spaceship[0], -2);
+		spaceship.x -= spaceship.leftSpeed;
 	}
-	if(keyIsDown(83)){ //Key S
-		spaceship[1] = addSpeed(spaceship[1], 2);
-	}
-	if(keyIsDown(87)){ //Key W
-		spaceship[1] = addSpeed(spaceship[1], -2);
-	}
-
-	if(keyIsDown(32)){ //Spacebar
-		
-	}
-
-	
 }
 
-function addSpeed(x, speed) {
-	return(x += speed);
-}
 
-function borderCheck(x, w){
-	if(x + w >= width){
-		speed = -speed;
-	}
-	if(x <= 0){
-		speed = -speed;
-	}
+function spawnImage(img, obj){
+	image(img, obj.x, obj.y, obj.w, obj.h);
 }
