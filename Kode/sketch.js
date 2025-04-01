@@ -1,5 +1,7 @@
 let imgSpaceship;
 let imgAlien;
+let imgBlueLaser;
+let blueLaser = {};
 let spaceship = {x: 350, y: 700, w: 100, h: 100, rightSpeed: 4, leftSpeed: 4, tempSpeed: 4};
 let alien = {};
 
@@ -7,6 +9,7 @@ function preload(){
 	imgBackground = loadImage('Baggrund.jpg');
 	imgSpaceship = loadImage('Spaceship.png');
 	imgAlien = loadImage('Alien.png');
+	imgBlueLaser = loadImage('blåLaser.png')
 }
 
 function setup()
@@ -19,6 +22,7 @@ function draw()
 	//Loader baggrund og player
 	image(imgBackground, 0, 0, 800, 800);
 	spawnImage(imgSpaceship, spaceship);
+	spawnImage(imgBlueLaser, blueLaser);
 
 	//Bordercheck left
 	if (spaceship.x <= 0) {
