@@ -3,9 +3,10 @@ let imgAlien;
 let imgBlueLaser;
 let imgBackground;
 let spaceship = {x: 350, y: 700, w: 100, h: 100, rightSpeed: 4, leftSpeed: 6, tempSpeed: 4};
-let blueLaser = {x: 0, y: 0, w: 0, h: 0, speed: 0};
+let blueLaser = {};
 let bLaserCount = 0;
 let isSpacebarPressed = false;
+let bLaserFired = false;
 let bLaserArr = [];
 let alien = {};
 
@@ -24,12 +25,10 @@ function setup()
 function keyPressed(){
 	if(keyCode === 32){ // Spacebar
 		isSpacebarPressed = true;
-		console.log('sejt');
 	}
 }
 
-function draw()
-{
+function draw(){
 	//Angiver koordinater til blueLaser
 	blueLaser = {x: spaceship.x + 23.5, y: spaceship.y - 75, w: 50, h: 100, speed: 6}
 	
@@ -51,28 +50,42 @@ function draw()
 		spaceship.rightSpeed = spaceship.tempSpeed;
 	}
 
+	//Bevægelse
 	if(keyIsDown(68)){ // Key D
-		spaceship.x += spaceship.rightSpeed;
+		spaceship.x = moveRight(spaceship);
 	}
 	if(keyIsDown(65)){ // Key A
-		spaceship.x -= spaceship.leftSpeed;
+		spaceship.x = moveLeft(spaceship);
 	}
 
 	//Skud
 	if(isSpacebarPressed == true){
-		console.log('meget' + ' ' + 'sejt');
 		bLaserCount = updateCount(bLaserCount, 1);
-		bLaserArr = newObjList(blueLaser, bLaserCount);
-
+		bLaserArr = newObjList(blueLaser, 1);
+		bLaserFired = true;
 		isSpacebarPressed = false;
 	}
-	
-	for(let i = 0; i<bLaserCount; i++){
 
+	if(bLaserFired == true){
+		for(let i = 0; i < bLaserArr.length; i++){
+			bLaserArr[i].y = bLaserArr[i].y - bLaserArr[i].speed
+		}
+		for(let i = 0; i < bLaserArr.length; i++){
+			spawnImage(imgBlueLaser, bLaserArr[i]);
+		}
 	}
+
 }
 
+function moveRight(obj){
+	let tempVal = obj.x + obj.rightSpeed
+	return tempVal
+}
 
+function moveLeft(obj){
+	let tempVal = obj.x - obj.leftSpeed
+	return tempVal
+}
 
 function spawnImage(img, obj){
 	image(img, obj.x, obj.y, obj.w, obj.h);
@@ -81,7 +94,7 @@ function spawnImage(img, obj){
 function newObjList(obj, n){
 	let list = [];
 	for(let i = 0; i<n; i++){
-		list.push(obj)
+		list.push(obj);
 	}
 	return list;
 }
