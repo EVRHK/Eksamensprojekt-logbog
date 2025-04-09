@@ -67,14 +67,23 @@ function draw(){
 	}
 
 	if(bLaserFired == true){
-		for(let i = 0; i < bLaserArr.length; i++){
-			bLaserArr[i].y = bLaserArr[i].y - bLaserArr[i].speed
-		}
+		moveUp(bLaserArr);
 		for(let i = 0; i < bLaserArr.length; i++){
 			spawnImage(imgBlueLaser, bLaserArr[i]);
 		}
+		if(bLaserArr[0].y <= -20){
+			bLaserFired = false;
+		}
 	}
 
+	//Alien
+	
+}
+
+function moveUp(obj) {
+	for (let i = 0; i < obj.length; i++) {
+		obj[i].y = obj[i].y - obj[i].speed;
+	}
 }
 
 function moveRight(obj){
