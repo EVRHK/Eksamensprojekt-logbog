@@ -1,20 +1,31 @@
-let imgSpaceship;
-let imgAlien;
-let imgBlueLaser;
+let startGame = false;
+let time;
+
 let imgBackground;
+
+let imgSpaceship;
 let spaceship = {x: 350, y: 700, w: 100, h: 100, rightSpeed: 4, leftSpeed: 6, tempSpeed: 4};
+
+let imgAlien;
+let alien = {x: 100, y: 100, w: 75, h: 75, rightSpeed: 4, leftSpeed: 4, tempSpeed: 4};
+let alienArr = [];
+let alienCount = 0;
+
+let imgBlueLaser;
 let blueLaser = {};
-let bLaserCount = 0;
+let bLaserArr = [];
+
 let isSpacebarPressed = false;
 let bLaserFired = false;
-let bLaserArr = [];
-let alien = {};
+
+let buttonStartPressed = false;
+
 
 function preload(){
 	imgBackground = loadImage('Baggrund.jpg');
 	imgSpaceship = loadImage('Spaceship.png');
 	imgAlien = loadImage('Alien.png');
-	imgBlueLaser = loadImage('blåLaser.png')
+	imgBlueLaser = loadImage('blåLaser.png');
 }
 
 function setup()
@@ -23,20 +34,34 @@ function setup()
 }
 
 function keyPressed(){
+	if(keyCode === 66){  //B
+		startGame = true;
+	}
+
 	if(keyCode === 32){ // Spacebar
-		isSpacebarPressed = true;
+		if(bLaserFired != true){
+			isSpacebarPressed = true;
+		}
 	}
 }
 
 function draw(){
 	//Angiver koordinater til blueLaser
-	blueLaser = {x: spaceship.x + 23.5, y: spaceship.y - 75, w: 50, h: 100, speed: 6}
-	
-	//Loader baggrund og player
-	image(imgBackground, 0, 0, 800, 800);
-	spawnImage(imgSpaceship, spaceship);
+	blueLaser = {x: spaceship.x + 23.5, y: spaceship.y - 75, w: 50, h: 100, speed: 6};
 
-	//Bordercheck left
+	if(startGame == false){
+		image(imgBackground, 0, 0, width, height);
+		textAlign(CENTER);
+		fill(220);
+		textSize(100);
+		text('Press B to begin!', width/2, height/2);
+	} else{
+		image(imgBackground, 0, 0, 800, 800);
+
+		//Loader player
+		spawnImage(imgSpaceship, spaceship);
+
+		//Bordercheck left
 	if (spaceship.x <= 0) {
 		spaceship.leftSpeed = 0;
 	}else {
@@ -60,7 +85,6 @@ function draw(){
 
 	//Skud
 	if(isSpacebarPressed == true){
-		bLaserCount = updateCount(bLaserCount, 1);
 		bLaserArr = newObjList(blueLaser, 1);
 		bLaserFired = true;
 		isSpacebarPressed = false;
@@ -71,12 +95,31 @@ function draw(){
 		for(let i = 0; i < bLaserArr.length; i++){
 			spawnImage(imgBlueLaser, bLaserArr[i]);
 		}
-		if(bLaserArr[0].y <= -20){
+		if(bLaserArr[0].y <= -40){
 			bLaserFired = false;
 		}
 	}
 
+	//Timer
+	if(alienCount == 0){
+		for(let i = 60*10; i >= 0; i--){
+			time = int(i/60)
+			text(time, 200, 200);
+		}
+
+	}
+
 	//Alien
+	textSize(50);
+	if(time == 0){
+
+	}
+	alienArr = newObjList(alien, 1);
+	spawnImage(imgAlien, alien);
+	}
+	
+
+
 	
 }
 
@@ -110,9 +153,4 @@ function newObjList(obj, n){
 
 function construct(obj){
 	return{...obj}
-}
-
-function updateCount(count, update){
-	count += update;
-	return count
 }
