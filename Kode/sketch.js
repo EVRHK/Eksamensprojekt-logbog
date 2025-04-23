@@ -8,14 +8,19 @@ let spaceship = {x: 350, y: 700, w: 100, h: 100, rightSpeed: 4, leftSpeed: 6, te
 let imgBlueLaser;
 let blueLaser = {};
 let bLaserArr = [];
+let bLaserFired = false;
 
 let isSpacebarPressed = false;
-let bLaserFired = false;
+
+let isHit = false;
+let score = 0;
+let killPoint = 10;
 
 // Alien-grid
 let imgAlien;
 let cols = 5;
 let rows = 3;
+let alienCount = cols * rows;
 let spacingX = 100;
 let spacingY = 80;
 let offsetX = 50;
@@ -31,16 +36,14 @@ function preload(){
 
 function setup() {
 	createCanvas(800, 800);
-	textAlign(CENTER);
-	fill(220);
-	textSize(100);
 	alienGrid(); //Loader grid-struktur
+	fill(0, 225, 0);
 }
 
 function alienGrid(){
 	for(let r = 0; r < rows; r++){
 		for(let c = 0; c < cols; c++){
-			var alien = construct({ x: offsetX + c * spacingX, y: spacingY + r * spacingY, w: 75, h: 75, speedX: 2});
+			var alien = construct({ x: offsetX + c * spacingX, y: spacingY + r * spacingY, w: 75, h: 75, speedX: 4});
 			alienArr.push(alien);
 		}
 	}
@@ -60,7 +63,12 @@ function keyPressed(){
 function draw(){
 	if(startGame == false){
 		image(imgBackground, 0, 0, width, height);
-		text('Press B to begin!', width/2, height/2);
+
+		push();
+			textAlign(CENTER);
+			textSize(100);
+			text('Press B to begin!', width/2, height/2);
+		pop();
 	} else{
 
 	image(imgBackground, 0, 0, 800, 800);
@@ -71,7 +79,20 @@ function draw(){
 	spaceshipLaser();
 	
 	spawnAliens();
+
+	push();
+		textSize(20);
+		text('score: ' + score, 30, 20);
+	pop();
+	updateScore();
 	
+	}
+}
+
+function updateScore() {
+	if (isHit != false) {
+		score += killPoint;
+		isHit = false;
 	}
 }
 
@@ -118,6 +139,7 @@ function spaceshipLaser() {
 							alienArr.unshift(newList[m]);
 						}
 						bLaserFired = false;
+						isHit = true;
 					}
 				}
 		}
