@@ -15,10 +15,11 @@ let isSpacebarPressed = false;
 let isHit = false;
 let score = 0;
 let killPoint = 10;
+let wave = 1;
 
 // Alien-grid
 let imgAlien;
-let cols = 5;
+let cols = 6;
 let rows = 3;
 let alienCount = cols * rows;
 let spacingX = 100;
@@ -36,14 +37,14 @@ function preload(){
 
 function setup() {
 	createCanvas(800, 800);
-	alienGrid(); //Loader grid-struktur
+	alienGrid(4); //Loader grid-struktur
 	fill(0, 225, 0);
 }
 
-function alienGrid(){
+function alienGrid(speed){
 	for(let r = 0; r < rows; r++){
 		for(let c = 0; c < cols; c++){
-			var alien = construct({ x: offsetX + c * spacingX, y: spacingY + r * spacingY, w: 75, h: 75, speedX: 4});
+			var alien = construct({ x: offsetX + c * spacingX, y: spacingY + r * spacingY, w: 75, h: 75, speedX: speed});
 			alienArr.push(alien);
 		}
 	}
@@ -79,13 +80,25 @@ function draw(){
 	spaceshipLaser();
 	
 	spawnAliens();
+	newWave();
+
+	for(let i = 0; i < alienArr.length; i++){
+		if(alienArr[i].y > offsetY + 7 * spacingY){
+			background(220);
+		}
+	}
 
 	push();
 		textSize(20);
 		text('score: ' + score, 30, 20);
 	pop();
 	updateScore();
-	
+	}
+}
+
+function newWave() {
+	if (alienArr.length === 0) {
+		alienGrid(4 + 1);
 	}
 }
 
