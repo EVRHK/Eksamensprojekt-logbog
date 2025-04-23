@@ -16,13 +16,13 @@ let bLaserFired = false;
 let imgAlien;
 let cols = 5;
 let rows = 3;
-let spacingX = 75;
-let spacingY = 50;
+let spacingX = 100;
+let spacingY = 80;
 let offsetX = 50;
 let offsetY = 100;
-let alien = {x: 100, y: 100, w: 75, h: 75, rightSpeed: 4, leftSpeed: 4, tempSpeed: 4};
 let alienArr = [];
-let alienCount = 0;
+/* let alien = {x: 100, y: 100, w: 75, h: 75, rightSpeed: 4, leftSpeed: 4, tempSpeed: 4};
+let alienCount = 0; */
 
 function preload(){
 	imgBackground = loadImage('Baggrund.jpg');
@@ -39,6 +39,14 @@ function setup() {
 	alienGrid(); //Loader grid-struktur
 }
 
+function alienGrid(){
+	for(let r = 0; r < rows; r++){
+		for(let c = 0; c < cols; c++){
+			var alien = construct({ x: offsetX + c * spacingX, y: spacingY + r * spacingY, w: 75, h: 75, speedX: 2});
+			alienArr.push(alien);
+		}
+	}
+}
 
 function keyPressed(){
 	if(keyCode === 66){  //B
@@ -64,22 +72,28 @@ function draw(){
 	spaceshipMove();
 	spaceshipLaser();
 
-	//Alien
-	alienArr = newObjList(alien, 1);
-	spawnImage(imgAlien, alien);
+	//Alien bevægelse
+	for(let i = 0; i < alienArr.length; i++){
+		alienArr[i].x += alienArr[i].speedX;
+		//Vend hvis en kant bliver ramt
+		if(alienArr[i].x <= 0 || alienArr[i].x + alienArr[i].w >= width){
+			alienArr[i].speedX *= -1;
+			alienArr[i].y += spacingY;
+		}
+		spawnImage(imgAlien, alienArr[i]);
+	}
+	
 	}
 }
 
 function spaceshipLaser() {
-	if (isSpacebarPressed == true) {
+	if (isSpacebarPressed == true) {	//Generer laser
 		blueLaser = { x: spaceship.x + 23.5, y: spaceship.y - 75, w: 50, h: 100, speed: 6 };
 		bLaserArr = newObjList(blueLaser, 1);
 		bLaserFired = true;
 		isSpacebarPressed = false;
 	}
-
-	//Skud bevægelse
-	if (bLaserFired == true) {
+	if (bLaserFired == true) {	//Laser bevægelse
 		moveUp(bLaserArr);
 		for (let i = 0; i < bLaserArr.length; i++) {
 			spawnImage(imgBlueLaser, bLaserArr[i]);
@@ -112,14 +126,7 @@ function bordercheck() {
 	}
 }
 
-function alienGrid(){
-	for(let r = 0; r < rows; r++){
-		for(let c = 0; c < cols; c++){
-			let a = construct({ x: offsetX + c * spacingX, y: spacingY + r * spacingY, w: 75, h: 75, speedX: 2});
-			alienArr.push(a);
-		}
-	}
-}
+
 
 function moveUp(obj) {
 	for (let i = 0; i < obj.length; i++) {
