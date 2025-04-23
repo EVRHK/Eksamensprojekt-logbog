@@ -21,8 +21,6 @@ let spacingY = 80;
 let offsetX = 50;
 let offsetY = 100;
 let alienArr = [];
-/* let alien = {x: 100, y: 100, w: 75, h: 75, rightSpeed: 4, leftSpeed: 4, tempSpeed: 4};
-let alienCount = 0; */
 
 function preload(){
 	imgBackground = loadImage('Baggrund.jpg');
@@ -42,7 +40,7 @@ function setup() {
 function alienGrid(){
 	for(let r = 0; r < rows; r++){
 		for(let c = 0; c < cols; c++){
-			var alien = construct({ x: offsetX + c * spacingX, y: spacingY + r * spacingY, w: 75, h: 75, speedX: 0});
+			var alien = construct({ x: offsetX + c * spacingX, y: spacingY + r * spacingY, w: 75, h: 75, speedX: 2});
 			alienArr.push(alien);
 		}
 	}
@@ -78,7 +76,7 @@ function draw(){
 }
 
 function spawnAliens() {
-	for (let i = 0; i < alienArr.length; i++) {
+	for (let  i = 0; i < alienArr.length; i++) {
 		alienArr[i].x += alienArr[i].speedX;
 		//Vend hvis en kant bliver ramt
 		if (alienArr[i].x <= 0 || alienArr[i].x + alienArr[i].w >= width) {
@@ -111,7 +109,15 @@ function spaceshipLaser() {
 					bLaserArr[l].y < alienArr[i].y + alienArr[i].h &&
 					bLaserArr[l].y + bLaserArr[l].h > alienArr[i].y)
 					{
-					bLaserFired = false;
+						console.log(i);
+						let newList = alienArr.slice(0 ,i);
+						for(let n = 0; n <= i; n++){
+							alienArr.shift()
+						}
+						for(let m = newList.length - 1; m >= 0; m--){
+							alienArr.unshift(newList[m]);
+						}
+						bLaserFired = false;
 					}
 				}
 		}
