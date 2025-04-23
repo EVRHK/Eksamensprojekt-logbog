@@ -42,7 +42,7 @@ function setup() {
 function alienGrid(){
 	for(let r = 0; r < rows; r++){
 		for(let c = 0; c < cols; c++){
-			var alien = construct({ x: offsetX + c * spacingX, y: spacingY + r * spacingY, w: 75, h: 75, speedX: 2});
+			var alien = construct({ x: offsetX + c * spacingX, y: spacingY + r * spacingY, w: 75, h: 75, speedX: 0});
 			alienArr.push(alien);
 		}
 	}
@@ -71,24 +71,27 @@ function draw(){
 	bordercheck();
 	spaceshipMove();
 	spaceshipLaser();
+	
+	spawnAliens();
+	
+	}
+}
 
-	//Alien bevægelse
-	for(let i = 0; i < alienArr.length; i++){
+function spawnAliens() {
+	for (let i = 0; i < alienArr.length; i++) {
 		alienArr[i].x += alienArr[i].speedX;
 		//Vend hvis en kant bliver ramt
-		if(alienArr[i].x <= 0 || alienArr[i].x + alienArr[i].w >= width){
+		if (alienArr[i].x <= 0 || alienArr[i].x + alienArr[i].w >= width) {
 			alienArr[i].speedX *= -1;
 			alienArr[i].y += spacingY;
 		}
 		spawnImage(imgAlien, alienArr[i]);
 	}
-	
-	}
 }
 
 function spaceshipLaser() {
+	blueLaser = { x: spaceship.x + 23.5, y: spaceship.y - 75, w: 50, h: 100, speed: 6 };
 	if (isSpacebarPressed == true) {	//Generer laser
-		blueLaser = { x: spaceship.x + 23.5, y: spaceship.y - 75, w: 50, h: 100, speed: 6 };
 		bLaserArr = newObjList(blueLaser, 1);
 		bLaserFired = true;
 		isSpacebarPressed = false;
@@ -97,9 +100,20 @@ function spaceshipLaser() {
 		moveUp(bLaserArr);
 		for (let i = 0; i < bLaserArr.length; i++) {
 			spawnImage(imgBlueLaser, bLaserArr[i]);
+			if (bLaserArr[0].y <= -40) { //Bordercheck
+				bLaserFired = false;
+			}
 		}
-		if (bLaserArr[0].y <= -40) {
-			bLaserFired = false;
+		for(let l = 0; l < bLaserArr.length; l++){ //Collision check
+			for(let i = 0; i < alienArr.length; i++){
+				if (bLaserArr[l].x < alienArr[i].x + alienArr[i].w &&
+					bLaserArr[l].x + bLaserArr[l].w > alienArr[i].x &&
+					bLaserArr[l].y < alienArr[i].y + alienArr[i].h &&
+					bLaserArr[l].y + bLaserArr[l].h > alienArr[i].y)
+					{
+					bLaserFired = false;
+					}
+				}
 		}
 	}
 }
