@@ -1,4 +1,7 @@
 let startGame = false;
+let gameOver = false;
+let score = 0;
+let highscore = 0;
 
 let imgBackground;
 
@@ -13,9 +16,9 @@ let bLaserFired = false;
 let isSpacebarPressed = false;
 
 let isHit = false;
-let score = 0;
+
 let killPoint = 10;
-let wave = 1;
+let wave = 0;
 
 // Alien-grid
 let imgAlien;
@@ -64,35 +67,51 @@ function keyPressed(){
 function draw(){
 	if(startGame == false){
 		image(imgBackground, 0, 0, width, height);
-
-		push();
-			textAlign(CENTER);
-			textSize(100);
-			text('Press B to begin!', width/2, height/2);
-		pop();
+		textAlign(CENTER);
+		textSize(75); //How to start
+		text('Press B to begin!', width/2, height/2);
+		textSize(90); //Title
+		text('SPACE INVADERS', width / 2, 200);
+		textSize(40); //Controls
+		text('Use a/d to move left/right', width / 2, 500);
+		updateHighscore();
+		textSize(42); //Highscore
+		text('Highscore: ' + highscore, width / 2, 300);
 	} else{
+		image(imgBackground, 0, 0, 800, 800);
+		spawnImage(imgSpaceship, spaceship);
 
-	image(imgBackground, 0, 0, 800, 800);
-	spawnImage(imgSpaceship, spaceship);
+		bordercheck();
+		spaceshipMove();
+		spaceshipLaser();
+		
+		spawnAliens();
+		newWave();
 
-	bordercheck();
-	spaceshipMove();
-	spaceshipLaser();
-	
-	spawnAliens();
-	newWave();
+		for(let i = 0; i < alienArr.length; i++){
+			if(alienArr[i].y > offsetY + 7 * spacingY){
+				startGame = false;
+				gameOver = true;
+				
 
-	for(let i = 0; i < alienArr.length; i++){
-		if(alienArr[i].y > offsetY + 7 * spacingY){
-			background(220);
+				if(score > highscore){
+					highscore = score;
+				}
+			}
 		}
-	}
 
-	push();
 		textSize(20);
+		textAlign(LEFT);
 		text('score: ' + score, 30, 20);
-	pop();
-	updateScore();
+		updateScore();
+	}
+}
+
+function updateHighscore() {
+	if (gameOver == true) {
+		if (score > highscore) {
+			highscore = score;
+		}
 	}
 }
 
@@ -180,8 +199,6 @@ function bordercheck() {
 		spaceship.rightSpeed = spaceship.tempSpeed;
 	}
 }
-
-
 
 function moveUp(obj) {
 	for (let i = 0; i < obj.length; i++) {
