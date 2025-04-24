@@ -74,6 +74,7 @@ function draw(){
 		text('SPACE INVADERS', width / 2, 200);
 		textSize(40); //Controls
 		text('Use a/d to move left/right', width / 2, 500);
+		text('Spacebutton to shoot', width / 2, 550);
 		updateHighscore();
 		textSize(42); //Highscore
 		text('Highscore: ' + highscore, width / 2, 300);
