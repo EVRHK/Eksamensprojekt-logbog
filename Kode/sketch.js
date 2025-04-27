@@ -45,9 +45,12 @@ function setup() {
 }
 
 function alienGrid(speed){
-	for(let r = 0; r < rows; r++){
-		for(let c = 0; c < cols; c++){
+	for(let r = 0; r < rows; r++){ // En løkke der gennemgår hver række
+		for(let c = 0; c < cols; c++){ // En løkke der gennemgår hver kolonne på rækken
+			//Hver fjende får sit eget objekt, som beskriver deres egenskaber og placering. 
+			//Variablen er global, da den skal bruges uden for dette scope.
 			var alien = construct({ x: offsetX + c * spacingX, y: spacingY + r * spacingY, w: 75, h: 75, speedX: speed});
+			//Hvert individuelle objekt sættes ind i et array for at samle informationen.
 			alienArr.push(alien);
 		}
 	}
